@@ -1,0 +1,25 @@
+{
+  "displayName": "Concat",
+  "name": "concat",
+  "platform": "web",
+  "version": "1.0.0",
+  "description": "Make a new data element by combining existing data elements.",
+  "author": {
+    "name": "John Simmons"
+  },
+  "viewBasePath": "src/view/",
+  "dataElements": [
+    {
+      "displayName": "concat data element",
+      "name": "concat-data-element",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/concatDataElement.js",
+      "viewPath": "dataElements/concatDataElement.html"
+    }
+  ],
+  "iconPath": "icon.svg"
+}

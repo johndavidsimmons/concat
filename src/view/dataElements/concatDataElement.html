@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" class="spectrum spectrum--medium spectrum--light">
+  <head>
+    <meta charset="UTF-8">
+    <title>Data Element</title>
+    <style>
+      input {
+        display: block;
+      }
+      button {
+        margin-bottom: 1em;
+      }
+    </style>
+      <link rel="stylesheet" href="//launch.adobe.com/mainstyles.cache-76ad32d04c666a8644f7.css">
+      <link rel="stylesheet" href="//launch.adobe.com/spectrumstyles.cache-eff4cb2210bbfeed65e3.css">
+      <style>
+        .spectrum-InputGroup {
+          display: flex;
+          padding-bottom: 1em
+        }
+        .addField{
+          width: 50%;
+        }
+        .outputField {
+          width: 50%
+        }
+        .push-top {
+          padding-top: 3em;
+        }
+        body {
+          padding-left: 1em;
+        }
+
+      </style>
+  <body>
+
+    <div class="spectrum-Body--large text">Build a data element from other data elements or static text</div>
+
+      <!-- Data element fields -->
+      <div id=fields>
+      
+      </div>
+
+      <!-- Add button -->
+      <button id="addFieldButton" class="spectrum-Button spectrum-Button--secondary MultipleItemEditor-addPatternButton">
+        <span class="spectrum-Button-label">Add Another</span>
+      </button>
+    <div class="spectrum-Body--large text push-top">Output</div>
+    <div class="spectrum-InputGroup Field--longer">
+      <input type="text" class="spectrum-Textfield u-fieldLong outputField" id="output" readonly>
+    </div>
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script src="helpers.js"></script>
+    <script>
+    
+      let dataElementSelectors = () => { return document.querySelectorAll(".dataElementSelector")};
+      let addFieldInputs = () => { return document.querySelectorAll(".addField"); }
+      const addFieldButton = document.querySelector("#addFieldButton");
+      let fieldsDiv = document.querySelector("#fields");
+      const placeHolder = "Add Data Element or Text";
+
+
+      addFieldInputs().forEach((el, idx) => {
+        // handle on any type of interaction event
+        el.addEventListener("keyup", setTextPreview, false);
+        el.addEventListener("change", setTextPreview, false);
+        el.addEventListener("blur", setTextPreview, false);
+      })
+
+      // create new input fields
+      const handleAddField = () => {
+
+        // make a new div for all the input components to live
+        const div = document.createElement('div');
+        Object.assign(div, {
+          className: "spectrum-InputGroup Field--longer"
+        })
+
+        
+        // Build input and assign attributes
+        const input = document.createElement('input');
+        Object.assign(input, {
+          placeholder: placeHolder,
+          type: "text",
+          className: "spectrum-Textfield u-fieldLong addField"
+        });
+
+        // Build data element button and assign attributes
+        const button = document.createElement('button');
+        button.innerHTML = '<svg viewBox="0 0 36 36" focusable="false" aria-hidden="true" role="img" class="spectrum-Icon spectrum-Icon--sizeS"><ellipse cx="18" cy="7" rx="16" ry="5"></ellipse><path d="M18 24.275c-4.936 0-14.212-1.169-16-4V29c0 2.761 7.163 5 16 5s16-2.239 16-5v-8.73c-2.447 3.095-11.064 4.005-16 4.005z"></path><path d="M18 14.275c-4.936 0-14.212-1.169-16-4V17c0 2.761 7.163 5 16 5s16-2.239 16-5v-6.73c-2.447 3.095-11.064 4.005-16 4.005z"></path></svg>';
+        // button.innerText = "Data Element";
+        Object.assign(button, {
+          className: "dataElementSelector spectrum-Tool spectrum-Tool--quiet"
+        });
+
+        // build remove button and add attributes
+        const removeButton = document.createElement('button');
+        removeButton.innerHTML = '<svg viewBox="0 0 36 36" focusable="false" aria-hidden="true" role="img" class="spectrum-Icon spectrum-Icon--sizeS"><path d="M26.485 6.686L18 15.172 9.515 6.686a1 1 0 0 0-1.414 0L6.686 8.1a1 1 0 0 0 0 1.414L15.172 18l-8.486 8.485a1 1 0 0 0 0 1.414L8.1 29.314a1 1 0 0 0 1.414 0L18 20.828l8.485 8.485a1 1 0 0 0 1.414 0l1.415-1.413a1 1 0 0 0 0-1.414L20.828 18l8.485-8.485a1 1 0 0 0 0-1.414L27.9 6.686a1 1 0 0 0-1.415 0z"></path></svg>';
+        let buttonHide = document.querySelectorAll("#fields div").length ? "" : "none"
+        Object.assign(removeButton, {
+          className: "removeButton spectrum-ActionButton spectrum-ActionButton--quiet u-gapLeft",
+          style: "display:" + buttonHide
+        })
+
+        // remove a field handler
+        removeButton.addEventListener('click', () => {
+          // remove the entire add field
+          event.target.parentElement.remove();
+          //reset the output text
+          setTextPreview();
+
+          // if only 1 add field left, hide remove button
+          if (addFieldInputs().length == 1) {
+            document.querySelector(".removeButton").style.display = "none";  
+          }
+        })
+
+        // Build div of input fields
+        div.appendChild(input);
+        div.appendChild(button);
+        div.appendChild(removeButton);
+        
+
+        // if there is only 1 field, hide the remove button
+        if (addFieldInputs().length >= 1) {
+          document.querySelectorAll(".removeButton")[0].style.display = "";
+        }
+
+
+        // Add field to fields input
+        fieldsDiv.appendChild(div);
+
+        //Add listeners to input field
+        input.addEventListener("keyup", setTextPreview, false);
+        input.addEventListener("change", setTextPreview, false);
+        input.addEventListener("blur", setTextPreview, false);
+
+        // add data element selector
+        dataElementSelectors().forEach((el, idx) => {
+        el.addEventListener("click", () => {
+          window.extensionBridge.openDataElementSelector().then(function(dataElement) {
+         
+          // add the data element value to the input box
+          addFieldInputs()[idx].value = dataElement; 
+          
+          // dispatch change event on data element selection
+          var changeEvent = new Event('change');
+          addFieldInputs()[idx].dispatchEvent(changeEvent);
+        });
+        })
+      });
+
+      }
+
+      // add a field when someone clicks the add field
+      addFieldButton.addEventListener('click', handleAddField, false)
+
+
+      window.extensionBridge.register({
+        init: function(info) {
+          if (info.settings) {
+            // TODO Populate form values from persisted settings.
+            let concatenatedDataElement = info.settings.concatenatedDataElement || "";
+            let concatenatedDataElementArray = info.settings.concatenatedDataElementArray || [];
+
+            // iterate array and put values in text boxes
+            if (concatenatedDataElementArray) {
+              
+              // place input fields
+              concatenatedDataElementArray.forEach((el) => handleAddField());
+
+              // place values in input fields
+              addFieldInputs().forEach((el, idx) => {
+                addFieldInputs()[idx].value = concatenatedDataElementArray[idx];
+                // dispatch change event on data element selection
+                var changeEvent = new Event('change');
+                addFieldInputs()[idx].dispatchEvent(changeEvent);
+
+              });
+            } else {
+              handleAddField();
+            }
+          } else {
+            handleAddField();
+          }
+        },
+
+        getSettings: function() {
+          // TODO Return settings object from form values.
+          return {
+            concatenatedDataElement: buildOutputString(addFieldInputs()) || "",
+            concatenatedDataElementArray: buildOutputArray(addFieldInputs()) || []
+          }
+        },
+
+        validate: function() {
+          // TODO Return whether settings are valid.
+          return true;
+        }
+      });
+    </script>
+  </body>
+</html>

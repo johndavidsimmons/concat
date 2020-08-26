@@ -3,14 +3,14 @@
   "name": "concat",
   "platform": "web",
   "version": "1.0.1",
-  "description": "Make a new data element by combining existing data elements.",
+  "description": "Make new data elements by concatenating existing data elements.",
   "author": {
     "name": "John Simmons"
   },
   "viewBasePath": "src/view/",
   "dataElements": [
     {
-      "displayName": "Concat data element",
+      "displayName": "Concat Data Element",
       "name": "concat-data-element",
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",

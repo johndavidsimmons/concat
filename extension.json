@@ -3,7 +3,7 @@
   "name": "concat",
   "platform": "web",
   "version": "1.0.1",
-  "description": "Make new data elements by concatenating existing data elements.",
+  "description": "Build a data element from other data elements or static text.",
   "author": {
     "name": "John Simmons"
   },

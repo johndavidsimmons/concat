@@ -1,6 +1,6 @@
 {
   "displayName": "Concat",
-  "name": "concat",
+  "name": "concat-extension",
   "platform": "web",
   "version": "1.0.1",
   "description": "Build a data element from other data elements or static text.",
@@ -21,5 +21,6 @@
       "viewPath": "dataElements/concatDataElement.html"
     }
   ],
-  "iconPath": "icon.svg"
+  "iconPath": "icon.svg",
+  "exchangeUrl": "https://www.adobeexchange.com/experiencecloud.details.104690.html"
 }

@@ -2,7 +2,7 @@
   "displayName": "Concat",
   "name": "concat-extension",
   "platform": "web",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Build a data element from other data elements or static text.",
   "author": {
     "name": "John Simmons"
